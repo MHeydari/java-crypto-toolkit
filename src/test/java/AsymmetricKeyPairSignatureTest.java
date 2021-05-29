@@ -6,7 +6,6 @@ import java.nio.charset.StandardCharsets;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 
-import static com.neverhood.utils.CryptographyHelper.encodeToBase64;
 import static org.junit.Assert.assertTrue;
 
 public class AsymmetricKeyPairSignatureTest {
@@ -24,20 +23,20 @@ public class AsymmetricKeyPairSignatureTest {
         publicKey = CryptographyHelper.retrievePublicKeyFromModulus(CryptographyHelper.decodeFromBase64(pukStr
                 .getBytes()));
     }
-    
+
     @Test
     public void encryptDecrypt() throws Exception {
 
         System.out.println("clear-payload: " + data);
         System.out.println("clear-payload-length:" + data.length());
         byte[] encryptedData = CryptographyHelper.encrypt(data.getBytes(StandardCharsets.UTF_8), publicKey);
-        System.out.println("encrypted-payload: "+ new String(encryptedData));
-        System.out.println("encrypted-payload-length: "+ new String(encryptedData).length());
+        System.out.println("encrypted-payload: " + new String(encryptedData));
+        System.out.println("encrypted-payload-length: " + new String(encryptedData).length());
         System.out.println("*************");
 
-        byte[] decryptedData = CryptographyHelper.decrypt(encryptedData,privateKey);
+        byte[] decryptedData = CryptographyHelper.decrypt(encryptedData, privateKey);
         String decryptedText = new String(decryptedData);
-        System.out.println("decrypted-payload: "+ decryptedText);
+        System.out.println("decrypted-payload: " + decryptedText);
         System.out.println("*************");
 
         assertTrue(data.contentEquals(decryptedText));
