@@ -33,7 +33,33 @@ public class CryptographyHelper {
         return instance.generateKeyPair();
     }
 
-    public static byte[] sign(byte[] data, PrivateKey privateKey)
+
+    public static String createSignatureInBase64(String privateKeyString, String data)
+            throws Exception {
+        byte[] private_bytes = decodeFromBase64(privateKeyString.getBytes());
+        PrivateKey privateKey = retrievePrivateKeyFromEncoded(private_bytes);
+
+        byte[] bytes = data.getBytes(StandardCharsets.UTF_8);
+        byte[] sign = sign(privateKey , bytes);
+        byte[] signInBase64 = encodeToBase64(sign);
+
+        return new String(signInBase64);
+    }
+
+    public static String createSignature(PrivateKey privateKey, String data)
+            throws Exception {
+        byte[] bytes = data.getBytes(StandardCharsets.UTF_8);
+        byte[] signature = sign(privateKey , bytes);
+        return new String(signature);
+    }
+    public static String createSignatureInBase64(PrivateKey privateKey, String data)
+            throws Exception {
+        String signature = createSignature(privateKey, data);
+        byte[] signatureInBase64 = encodeToBase64(signature.getBytes(StandardCharsets.UTF_8));
+        return new String(signatureInBase64);
+    }
+
+    public static byte[] sign(PrivateKey privateKey , byte[] data)
             throws Exception {
         Signature sig = Signature.getInstance("SHA1withRSA");
         sig.initSign(privateKey);
@@ -42,7 +68,7 @@ public class CryptographyHelper {
         return sig.sign();
     }
 
-    public static boolean verify(PublicKey publicKey, byte[] data,
+    public static boolean verifySignature(PublicKey publicKey, byte[] data,
                                  byte[] signature) throws Exception {
         Signature sig = Signature.getInstance("SHA1withRSA");
         sig.initVerify(publicKey);
@@ -51,25 +77,12 @@ public class CryptographyHelper {
         return sig.verify(signature);
     }
 
-    public static String createSignature(String privateKeyString, String data)
+    public static Boolean verifySignatureAsBase64(PublicKey publicKey, String data , String signature)
             throws Exception {
-        byte[] private_bytes = decodeFromBase64(privateKeyString.getBytes());
-        PrivateKey privateKey = retrievePrivateKeyFromEncoded(private_bytes);
+        byte[] dataAsBytes = data.getBytes(StandardCharsets.UTF_8);
+        byte[] signAsBytes = decodeFromBase64(signature.getBytes(StandardCharsets.UTF_8));
 
-        byte[] bytes = data.getBytes(StandardCharsets.UTF_8);
-        byte[] sign = sign(bytes, privateKey);
-        byte[] sign_64 = encodeToBase64(sign);
-
-        return new String(sign_64);
-    }
-
-    public static String createSignature(PrivateKey privateKey, String data)
-            throws Exception {
-        byte[] bytes = data.getBytes(StandardCharsets.UTF_8);
-        byte[] sign = sign(bytes, privateKey);
-        byte[] sign_64 = encodeToBase64(sign);
-
-        return new String(sign_64);
+        return verifySignature(publicKey,dataAsBytes, signAsBytes);
     }
 
     public static byte[] encrypt(byte[] data, Key key) throws Exception {
