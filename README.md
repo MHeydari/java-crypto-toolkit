@@ -1,7 +1,13 @@
 # java-crypto-toolkit
 
-### Integrated sample of using symmetric/asymmetric cryptography in action
+### Integrated samples and unit-test of symmetric/asymmetric cryptography in Java lang
 #### Table of content:
-- TBA
+- Asymmetric encyption/decription (RSA)
+- Data signing
+- Data fingerprint
+- Converting openssl pem to der public key and viceversa
+- Hashing (MD5)
+- Symmetric encyption/decription
+- Base64 encoding/ decoding
 
 
